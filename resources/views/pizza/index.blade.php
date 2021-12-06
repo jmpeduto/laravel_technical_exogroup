@@ -1,6 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+<script src="{{ secure_asset('js/jquery-3.6.0.min.js') }}"></script>
+
+
+<script>
+    $(document).ready(function(){
+// alert("caca");
+
+        
+    });
+</script>
 <div class="container">
     <div class="row justify-content-center">
     <div class="col-md-4">
@@ -53,4 +63,5 @@
             </div>
         </div>
 </div>
+
 @endsection
