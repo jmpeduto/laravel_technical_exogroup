@@ -1,0 +1,4 @@
+user: is_admin
+ingredients: id, name, price
+pizza_ingredients: pizza_id, ingredient_id, price
+order: id, user_id, pizza_id, small, medium, large
