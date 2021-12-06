@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<script src="{{ secure_asset('js/jquery-3.6.0.min.js') }}"></script>
-
 
 <script>
     $(document).ready(function(){
@@ -26,10 +24,17 @@
                 </div>
             </div>
     </div>
-        <div class="col-md-8">
+    <div class="col-md-8">
+            <form action="{{route('pizza.store')}}" method="post">@csrf
             <div class="card">
                 <div class="card-header">Pizza</div>
-
+                @if(count($errors)>0)
+                <div class="alert alert-danger">
+                    @foreach($errors->all() as $error)
+                        <p>{{$error}}</p>
+                        @endforeach
+                    </div>
+                @endif
                 <div class="card-body">
                   <div class="form-group">
                       <label for="nombre">Nombre</label>
@@ -40,8 +45,8 @@
                       <textarea name="descripcion" id="" cols="30" rows="10" class="form-control"></textarea>
                   </div>
                   <div class="form-group">
-                      <label for="descripcion">Ingredientes (pueden ser mas de 1)</label>
-                      <select name="" id="" class="form-control" multiple>
+                      <label for="ingredientes">Ingredientes (pueden ser mas de 1)</label>
+                      <select name="ingredientes" id="" class="form-control" multiple>
                           <option value="pepe">Pepperoni</option>
                           <option value="muzza">Muzzarella</option>
                           <option value="hongo">Hongo</option>
@@ -61,6 +66,7 @@
                   </div>
                 </div>
             </div>
+        </form>
         </div>
 </div>
 
