@@ -17,24 +17,28 @@
 
                 <div class="card-body">
                         <ul class="list-group">
-                            <a href="" class="list-group-item list-group-item-action">Ver</a>
-                            <a href="" class="list-group-item list-group-item-action">Crear</a>
+                            <a href="{{route('pizza.index')}}" class="list-group-item list-group-item-action">Ver</a>
+                            <a href="{{route('pizza.create')}}" class="list-group-item list-group-item-action">Crear</a>
                         </ul>
 
                 </div>
             </div>
+            @if(count($errors)>0)
+            <div class="card mt-3">
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        @foreach($errors->all() as $error)
+                            <p>{{$error}}</p>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                @endif
     </div>
     <div class="col-md-8">
-            <form action="{{route('pizza.store')}}" method="post">@csrf
+            <form action="{{route('pizza.store')}}" method="post" enctype="multipart/form-data">@csrf
             <div class="card">
                 <div class="card-header">Pizza</div>
-                @if(count($errors)>0)
-                <div class="alert alert-danger">
-                    @foreach($errors->all() as $error)
-                        <p>{{$error}}</p>
-                        @endforeach
-                    </div>
-                @endif
                 <div class="card-body">
                   <div class="form-group">
                       <label for="nombre">Nombre</label>
@@ -46,10 +50,10 @@
                   </div>
                   <div class="form-group">
                       <label for="ingredientes">Ingredientes (pueden ser mas de 1)</label>
-                      <select name="ingredientes" id="" class="form-control" multiple>
-                          <option value="pepe">Pepperoni</option>
-                          <option value="muzza">Muzzarella</option>
-                          <option value="hongo">Hongo</option>
+                      <select name="ingredientes[]" id="" class="form-control" multiple>
+                          <option value="10">Pepperoni</option>
+                          <option value="5">Muzzarella</option>
+                          <option value="20">Hongo</option>
                       </select>
                   </div>
                   <!-- <div class="form-inline">
