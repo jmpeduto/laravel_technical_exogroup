@@ -30,6 +30,15 @@
                                 <label for="description">Descripcion</label>
                                 <textarea class="form-control" name="description">{{ $pizza->descripcion }}</textarea>
                             </div>
+                            <div class="form-group">
+                                <label for="ingredientes">Ingredientes (pueden ser mas de 1)</label>
+                                {{-- {{var_dump($pizza)}} --}}
+                                <select name="ingredientes[]" id="" class="form-control" multiple>
+                                    @foreach ($ingredients as $key => $ingrediente)
+                                    <option value="{{$ingrediente['ingredient_id']}}">{{$ingrediente['ingrediente_nombre']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="form-inline">
                                 <label>Precio($)</label>
                                 <input type="text" name="precio" class="form-control"

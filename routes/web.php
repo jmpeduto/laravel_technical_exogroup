@@ -26,5 +26,8 @@ Route::group(['middleware' => 'auth', 'admin'], function(){
     Route::get('/pizza/{id}/edit', [App\Http\Controllers\PizzaController::class, 'edit'])->name('pizza.edit');
     Route::get('/pizza/{id}/update', [App\Http\Controllers\PizzaController::class, 'update'])->name('pizza.update');
     Route::post('/pizza/store', [App\Http\Controllers\PizzaController::class, 'store'])->name('pizza.store');
+    
+    //orden de usuario
+    Route::get('/user/order', [App\Http\Controllers\UserOrderController::class, 'create'])->name('user.order');
 });
 

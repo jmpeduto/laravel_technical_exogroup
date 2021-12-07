@@ -5,7 +5,13 @@
 <script>
     $(document).ready(function(){
 // alert("caca");
-
+var precio_total = 0;
+        $("#ingredients").click(function(){
+            var ingredientes = $(this).find('option:selected');
+            $.map(ingredientes, function(ingrediente){
+                console.log($(ingrediente).data('precio'));
+            });
+        })
         
     });
 </script>
@@ -50,16 +56,18 @@
                   </div>
                   <div class="form-group">
                       <label for="ingredientes">Ingredientes (pueden ser mas de 1)</label>
-                      <select name="ingredientes[]" id="" class="form-control" multiple>
-                          <option value="10">Pepperoni</option>
-                          <option value="5">Muzzarella</option>
-                          <option value="20">Hongo</option>
+                      <select name="ingredientes[]" id="ingredients" class="form-control" multiple size="10">
+                          @foreach ($ingredientes as $ingredient)
+                          <option data-precio="{{$ingredient->precio}}" value="{{$ingredient->id}}">{{$ingredient->nombre}}</option>
+                          @endforeach
+                          {{-- <option value="2">Mozzarella</option>
+                          <option value="3">Hongos</option> --}}
                       </select>
                   </div>
-                  <!-- <div class="form-inline">
+                  <div class="form-inline mt-2">
                       <label for="">Precio($)</label>
-                      <input type="number" name="precio" id="" class="form-control" placeholder="Precio total">
-                  </div> -->
+                      <input type="number" readonly name="precio" id="" class="form-control" placeholder="Precio total">
+                  </div>
                   <br>
                   <div class="form-group">
                       <label for="imagen">Imagen</label>
