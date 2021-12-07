@@ -3,21 +3,21 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">Menu</div>
                     <div class="card-body">
                         <ul class="list-group">
-                        <a href="{{route('pizza.index')}}" class="list-group-item list-group-item-action">Listado</a>
-                        <a href="{{route('pizza.create')}}" class="list-group-item list-group-item-action">Crear</a>
+                        <a href="{{route('pizza.index')}}" class="list-group-item list-group-item-action">Listado de pizzas</a>
+                        <a href="{{route('pizza.create')}}" class="list-group-item list-group-item-action">Crear pizza</a>
                         {{-- <a href="{{route('user.order')}}" class="list-group-item list-group-item-action">User order</a> --}}
-                        <a href="" class="list-group-item list-group-item-action">Ordenes</a>
+                        <a href="" class="list-group-item list-group-item-action">Ordenes de pizzas</a>
   
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <div class="card">
                     <div class="card-header">Listado de pizzas
                         <a href="{{ route('pizza.create') }}">
@@ -92,7 +92,7 @@
                                     @endforeach
 
                                 @else
-                                    <p>No pizza to show</p>
+                                    <p>No hay pizzas para mostrar</p>
                                 @endif
 
 
