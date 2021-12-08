@@ -10,17 +10,22 @@
                 </ol>
             </nav>
             <div class="card">
-                <div class="card-header">order
-                    <a style="float:right;" href="{{route('pizza.index')}}"><button class="bnt btn-secondary btn-sm" style="margin-left: 5px;">Ver pizza</button></a>
+                <div class="card-header">Orden
+                    <a style="float:right;" href="{{route('pizza.index')}}"><button class="bnt btn-secondary btn-sm" style="margin-left: 5px;">Listado de pizzas</button></a>
                     <a style="float:right;" href="{{route('pizza.create')}}"><button class="bnt btn-secondary btn-sm">Agregar pizza</button></a>
 
                 </div>
                 <div class="card-body">
+                    @if (session('message'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('message') }}
+                            </div>
+                        @endif
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th scope="col">Usuario</th>
-                                <th scope="col">Telefono</th>
+                                <th scope="col">Email/Telefono</th>
                                 <th scope="col">Fecha/Hora</th>
                                 <th scope="col">Pizza</th>
                                 <th scope="col">Total($)</th>
@@ -34,23 +39,30 @@
                         <tbody>
                             @foreach ($orders as $order)
                                 <tr>
-                                    <td>{{ $order->user->nombre }}</td>
+                                    <td>{{ $order->user->name }}</td>
                                 <td >{{ $order->user->email }}<br>{{$order->telefono}}</td>
                                     <td>{{ $order->fecha }}/{{ $order->hora }}</td>
                                     <td>{{ $order->pizza->nombre }}</td>
+                                    <td>{{ $order->pizza->precio }}</td>
                                     <td>{{ $order->body }}</td>
                                     <td>{{ $order->estado }}</td>
                                     <form action="{{ route('order.status',$order->id) }}" method="post">@csrf
                                         <td>
-                                            <input name="status" type="submit" value="accepted"
+                                            <input @if ($order->estado == 'aceptado')
+                                                disabled class="btn btn-sm btn-light"
+                                            @endif name="status" type="submit" value="aceptado"
                                                 class="btn btn-primary btn-sm">
                                         </td>
                                         <td>
-                                            <input name="status" type="submit" value="rejected"
+                                            <input @if ($order->estado == 'rechazado')
+                                            disabled class="btn btn-sm btn-light"
+                                        @endif name="status" type="submit" value="rechazado"
                                                 class="btn btn-danger btn-sm">
                                         </td>
                                         <td>
-                                            <input name="status" type="submit" value="completed"
+                                            <input @if ($order->estado == 'completado')
+                                            disabled class="btn btn-sm btn-light"
+                                        @endif name="status" type="submit" value="completado"
                                                 class="btn btn-success btn-sm">
                                         </td>
                                     </form>

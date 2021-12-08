@@ -11,7 +11,7 @@
                         <a href="{{route('pizza.index')}}" class="list-group-item list-group-item-action">Listado</a>
                         <a href="{{route('pizza.create')}}" class="list-group-item list-group-item-action">Crear</a>
                         {{-- <a href="{{route('user.order')}}" class="list-group-item list-group-item-action">User order</a> --}}
-                        <a href="" class="list-group-item list-group-item-action">Ordenar</a>
+                        <a href="{{route('user.order')}}" class="list-group-item list-group-item-action">Ordenes</a>
   
                         </ul>
                     </div>
@@ -29,6 +29,11 @@
                         @if (session('message'))
                             <div class="alert alert-success" role="alert">
                                 {{ session('message') }}
+                            </div>
+                        @endif
+                        @if (session('message_delete'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ session('message_delete') }}
                             </div>
                         @endif
                         <div class="table-responsive">
@@ -53,42 +58,50 @@
                                             <td><img src="{{ Storage::url($pizza->imagen) }}" width="80"></td>
                                             <td>{{ $pizza->nombre }}</td>
                                             <td>{{ $pizza->descripcion }}</td>
-                                            <td>ingrediente1, ingrediente2</td>
+                                            <td>
+                                                @php
+                                                    $ingredientes_ = array();
+                                                @endphp
+                                                @foreach ($pizza->ingredientes as $pizza_ingredient)
+                                                @php
+                                                    array_push($ingredientes_, $pizza_ingredient->ingrediente_nombre);
+                                                @endphp
+                                                @endforeach
+                                                @php
+                                                    echo implode( ', ', $ingredientes_ );
+                                                @endphp
+                                                
+                                            </td>
                                             <td>{{ $pizza->precio }}</td>
                                             <td><a href="{{ route('pizza.edit', $pizza->id) }}"><button
                                                         class="btn btn-primary">Editar</button></a></td>
-                                            <td><button class="btn btn-danger" data-toggle="modal"
-                                                    data-target="#exampleModal{{ $pizza->id }}">Eliminar</button></td>
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="exampleModal{{ $pizza->id }}" tabindex="-1"
-                                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                {{-- <form action="{{ route('pizza.destroy', $pizza->id) }}" method="post"> --}}
-                                                <form action="" method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel">Delete
-                                                                    confirmation</h5>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                Are you sure ?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn btn-danger">Delete
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                            <td><button class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModal{{ $pizza->id }}">Eliminar</button></td>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal{{ $pizza->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form action="{{ route('pizza.destroy', $pizza->id) }}" method="post">
+        @csrf
+        @method('DELETE')
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Confirmar eliminacion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Esta seguro de eliminar la pizza?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-danger">Eliminar</button>
+        </div>
+      </div>
+    </div>
+    </form>
+  </div>
+
+                                            
                                         </tr>
                                     @endforeach
 

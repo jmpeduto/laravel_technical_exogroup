@@ -1,9 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
+<script>
+    var precio_total = 0;
+    $(document).ready(function(){
+    $("#ingredients").click(function(){
+        var ingredientes = $(this).find('option:selected');
+        precio_total = 0;
+        $.map(ingredientes, function(ingrediente){
+                precio_total += $(ingrediente).data('precio');
+            });
+            console.log(precio_total);
+            //calcula el precio y le agrega el 0.5 del valor de los ingredientes
+            $("#precio").val(precio_total*1.5);
+        });
+        
+    });
+</script>
     <div class="container">
         <div class="row justify-content-center">
-
             <div class="col-md-8">
                 @if (count($errors) > 0)
                 <div class="card mt-5">
@@ -23,16 +38,16 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="name">Nombre</label>
-                                <input type="text" class="form-control" name="name" placeholder="name of pizza"
+                                <input type="text" class="form-control" name="nombre" placeholder="name of pizza"
                                     value="{{ $pizza->nombre }}">
                             </div>
                             <div class="form-group">
                                 <label for="description">Descripcion</label>
-                                <textarea class="form-control" name="description">{{ $pizza->descripcion }}</textarea>
+                                <textarea class="form-control" name="descripcion">{{ $pizza->descripcion }}</textarea>
                             </div>
                             <div class="form-group">
                                 <label for="ingredientes">Ingredientes (pueden ser mas de 1)</label>
-                                <select name="ingredientes[]" id="" class="form-control" multiple size="10">
+                                <select name="ingredientes[]" id="ingredients" class="form-control" multiple size="10">
                                     @for($i=0; $i < count($ingredients); $i++)
                                     @if (isset($ingredients[$i]['selected']))
                                         <option data-precio="{{$ingredients[$i]['precio']}}" selected value="{{$ingredients[$i]['id']}}">{{$ingredients[$i]['nombre']}}</option>
@@ -44,7 +59,7 @@
                             </div>
                             <div class="form-inline">
                                 <label>Precio($)</label>
-                                <input type="text" name="precio" class="form-control"
+                                <input type="text" name="precio" id="precio" class="form-control"
                                     placeholder="precio" readonly value="{{ $pizza->precio }}">
                             </div>
                             <div class="form-group">

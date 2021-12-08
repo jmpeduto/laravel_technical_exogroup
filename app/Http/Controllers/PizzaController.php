@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\PizzaHelper;
 use App\Http\Requests\PizzaStoreRequest;
+use App\Http\Requests\PizzaUpdateRequest;
 use App\Models\Ingredient;
 use App\Models\Pizza;
 use App\Models\PizzaIngredients;
@@ -19,6 +20,11 @@ class PizzaController extends Controller
     public function index()
     {
         $pizzas = Pizza::paginate(5);
+
+        foreach ($pizzas as $pizza) {
+            # code...
+            $pizza->ingredientes = PizzaIngredients::where('pizza_id', $pizza->id)->get();
+        }
         return view('pizza.index', compact('pizzas'));
     }
 
@@ -61,13 +67,6 @@ class PizzaController extends Controller
                 'ingrediente_nombre' => $ingrediente->nombre
             ]);
         }
-        // dd($pizza);
-        //genera los ingredientes de la pizza
-        // PizzaIngredients::create([
-        //     'pizza_id' => $pizza->id,
-        //     'ingredient_id' => $ingredient_id,
-        //     'ingrediente_nombre' => $ingrediente->nombre
-        // ]);
 
         return redirect()->route('pizza.index')->with('message', 'La pizza fue creada correctamente!');
     }
@@ -124,16 +123,6 @@ class PizzaController extends Controller
         }
 
         $ingredients = array_merge($pizza_ingredients_aux_2, $all_ingredients);
-        // dd($ingredients);
-        // dd($all_ingredients);
-        // dd($pizza_ingredients_aux_2);
-
-        // $ingredients_merge = $pizza_ingredients_aux;
-        // dd($ingredients_merge);
-        // foreach ($pizza_ingredients_aux as $ingredient) {
-        //     # code...
-        //     array_push($pizza_ingredients, $ingredient);
-        // }
         return view('pizza.edit', compact('pizza', 'ingredients'));
     }
 
@@ -144,9 +133,39 @@ class PizzaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PizzaUpdateRequest $request, $id)
     {
         //
+        $pizza = Pizza::find($id);
+        if($request->has('imagen')){
+            $path = $request->imagen->store('public/pizza');
+        }else{
+           $path =  $pizza->imagen;
+        }
+        // $pizza = new Pizza(); 
+        $pizza->nombre = $request->nombre;
+        $pizza->descripcion = $request->descripcion;
+        $pizza->precio = $request->precio;
+        $pizza->imagen = $path;
+        $pizza->update();
+
+        $pizza_ingredients = PizzaIngredients::where('pizza_id', $pizza->id)->delete();
+        // $pizza_ingredients->delete();
+        // $pizza_ingredients->ingredients = $request->ingredientes;
+        // $pizza_ingredients->update();
+
+        foreach ($request->ingredientes as $ingredient_id) {
+            // $ingrediente = Ingredient::find($ingredient_id);
+            // $pizza_ingredients->update()
+            $ingrediente = Ingredient::find($ingredient_id);
+            PizzaIngredients::create([
+                'pizza_id' => $pizza->id,
+                'ingredient_id' => $ingrediente->id,
+                'ingrediente_nombre' => $ingrediente->nombre
+            ]);
+        }
+
+        return redirect()->route('pizza.index')->with('message','La pizza fue actualizada!');
     }
 
     /**
@@ -158,5 +177,8 @@ class PizzaController extends Controller
     public function destroy($id)
     {
         //
+        Pizza::find($id)->delete();
+        PizzaIngredients::where('pizza_id', $id)->delete();
+        return redirect()->route('pizza.index')->with('message_delete','La pizza fue eliminada!');
     }
 }
