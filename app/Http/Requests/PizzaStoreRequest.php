@@ -38,7 +38,7 @@ class PizzaStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'nombre.required' => 'El nombre deb estar completo',
+            'nombre.required' => 'El nombre debe estar completo',
             'descripcion.required' => 'La descripcion debe estar completa',
             'ingredientes.required' => 'Los ingredientes deben estar seleccionados',
             'imagen.required' => 'Debe seleccionar un archivo de imagen para la pizza',

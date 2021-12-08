@@ -13,10 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('/pizza/index');
+//     // Route::get('/home', [App\Http\Controllers\PizzaController::class, 'index'])->name('pizza.index');
+// });
 
+Route::get('/', [App\Http\Controllers\PizzaController::class, 'index'])->name('pizza.index');
 Auth::routes();
 
 Route::group(['middleware' => 'auth', 'admin'], function(){

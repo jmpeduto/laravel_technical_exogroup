@@ -100,9 +100,11 @@
                             </tbody>
                         </table>
                     </div>
-                        {{ $pizzas->links() }}
-                    </div>
                 </div>
+                <div class="" style="position: relative; left: 10px;">
+                    {{ $pizzas->links("pagination::bootstrap-4") }}
+                </div>
+            </div>
             </div>
         </div>
     </div>

@@ -44,29 +44,30 @@ class PizzaController extends Controller
     {
         $path = $request->imagen->store('public/pizza');
         // dd($precio);
-        foreach ($request->ingredientes as $ingredient_id) {
-            $ingrediente = Ingredient::find($ingredient_id);
-            PizzaIngredients::create([
-                'pizza_id' => $id,
-                'ingredient_id' => $ingredient_id,
-                'ingrediente_nombre' => $ingrediente->nombre
-            ]);
-        }
 
         $precio = PizzaHelper::calcularPrecio($request->ingredientes);
         $pizza = Pizza::create([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
-            'precio' => $precio,
+            'precio' => $request->precio,
             'imagen' => $path
         ]);
+
+        foreach ($request->ingredientes as $ingredient_id) {
+            $ingrediente = Ingredient::find($ingredient_id);
+            PizzaIngredients::create([
+                'pizza_id' => $pizza->id,
+                'ingredient_id' => $ingredient_id,
+                'ingrediente_nombre' => $ingrediente->nombre
+            ]);
+        }
         // dd($pizza);
         //genera los ingredientes de la pizza
-        PizzaIngredients::create([
-            'pizza_id' => $pizza->id,
-            'ingredient_id' => $ingredient_id,
-            'ingrediente_nombre' => $ingrediente->nombre
-        ]);
+        // PizzaIngredients::create([
+        //     'pizza_id' => $pizza->id,
+        //     'ingredient_id' => $ingredient_id,
+        //     'ingrediente_nombre' => $ingrediente->nombre
+        // ]);
 
         return redirect()->route('pizza.index')->with('message', 'La pizza fue creada correctamente!');
     }
@@ -91,13 +92,48 @@ class PizzaController extends Controller
     public function edit($id)
     {
         $pizza = Pizza::find($id);
-        $pizza_ingredients = PizzaIngredients::where('pizza_id', $id)->orderBy('ingredient_id')
-            ->take(10)->get();
-        $ingredients = array();
-        foreach ($pizza_ingredients as $ingredient) {
+        $pizza_ingredients = PizzaIngredients::select('ingredient_id as id')->where('pizza_id', $id)->orderBy('ingredient_id')
+            ->get();
+        $pizza_ingredients_aux = array();
+        foreach ($pizza_ingredients as $pizza_ingredient) {
             # code...
-            array_push($ingredients, $ingredient);
+            array_push($pizza_ingredients_aux, array('id' => $pizza_ingredient['id'], 'selected' => 'true'));
         }
+        $all_ingredients = Ingredient::all()->toArray();
+        // $ingredients_merge = array_merge($pizza_ingredients_aux, $all_ingredients);
+        // $ingredients_merge = array_unique(array_merge($pizza_ingredients_aux, $all_ingredients), SORT_REGULAR);
+
+        $i = 0;
+        $pizza_ingredients_aux_2 = array();
+        foreach ($all_ingredients as $ingredient) {
+            # code...
+            // dd($ingredient);
+            // if ($i < count($all_ingredients)) {
+                foreach ($pizza_ingredients_aux as $ingrediente_aux) {
+                    # code...
+                    if ($ingredient['id'] == $ingrediente_aux['id']) {
+                        $ingredient['selected'] = true;
+                        array_push($pizza_ingredients_aux_2, $ingredient);
+                        unset($all_ingredients[$i]);
+                    }
+                }
+            // }
+            // if($x < count($pizza_ingredients_aux)){
+            // }
+            $i++;
+        }
+
+        $ingredients = array_merge($pizza_ingredients_aux_2, $all_ingredients);
+        // dd($ingredients);
+        // dd($all_ingredients);
+        // dd($pizza_ingredients_aux_2);
+
+        // $ingredients_merge = $pizza_ingredients_aux;
+        // dd($ingredients_merge);
+        // foreach ($pizza_ingredients_aux as $ingredient) {
+        //     # code...
+        //     array_push($pizza_ingredients, $ingredient);
+        // }
         return view('pizza.edit', compact('pizza', 'ingredients'));
     }
 

@@ -3,15 +3,18 @@
 @section('content')
 
 <script>
+    var precio_total = 0;
     $(document).ready(function(){
-// alert("caca");
-var precio_total = 0;
-        $("#ingredients").click(function(){
-            var ingredientes = $(this).find('option:selected');
-            $.map(ingredientes, function(ingrediente){
-                console.log($(ingrediente).data('precio'));
+    $("#ingredients").click(function(){
+        var ingredientes = $(this).find('option:selected');
+        precio_total = 0;
+        $.map(ingredientes, function(ingrediente){
+                precio_total += $(ingrediente).data('precio');
             });
-        })
+            console.log(precio_total);
+            //calcula el precio y le agrega el 0.5 del valor de los ingredientes
+            $("#precio").val(precio_total*1.5);
+        });
         
     });
 </script>
@@ -66,7 +69,7 @@ var precio_total = 0;
                   </div>
                   <div class="form-inline mt-2">
                       <label for="">Precio($)</label>
-                      <input type="number" readonly name="precio" id="" class="form-control" placeholder="Precio total">
+                      <input type="number" readonly name="precio" id="precio" class="form-control" placeholder="0">
                   </div>
                   <br>
                   <div class="form-group">

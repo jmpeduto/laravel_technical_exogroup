@@ -32,11 +32,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="ingredientes">Ingredientes (pueden ser mas de 1)</label>
-                                {{-- {{var_dump($pizza)}} --}}
-                                <select name="ingredientes[]" id="" class="form-control" multiple>
-                                    @foreach ($ingredients as $key => $ingrediente)
-                                    <option value="{{$ingrediente['ingredient_id']}}">{{$ingrediente['ingrediente_nombre']}}</option>
-                                    @endforeach
+                                <select name="ingredientes[]" id="" class="form-control" multiple size="10">
+                                    @for($i=0; $i < count($ingredients); $i++)
+                                    @if (isset($ingredients[$i]['selected']))
+                                        <option data-precio="{{$ingredients[$i]['precio']}}" selected value="{{$ingredients[$i]['id']}}">{{$ingredients[$i]['nombre']}}</option>
+                                    @else
+                                        <option data-precio="{{$ingredients[$i]['precio']}}" value="{{$ingredients[$i]['id']}}">{{$ingredients[$i]['nombre']}}</option>
+                                    @endif
+                                    @endfor
                                 </select>
                             </div>
                             <div class="form-inline">
